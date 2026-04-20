@@ -1,0 +1,5 @@
+Invoice From: Adobe Inc.
+Website: adobe.com
+Amount Due: 59.99 USD
+Invoice Date: 2026-04-16
+Country: US
