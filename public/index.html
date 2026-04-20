@@ -32,10 +32,10 @@
         </section>
 
         <section class="progress-card">
-          <div class="progress-step active">1. Find merchant</div>
-          <div class="progress-step">2. Confirm</div>
-          <div class="progress-step">3. Upload invoice</div>
-          <div class="progress-step">4. Validate</div>
+          <div class="progress-step active"><span class="progress-number">1</span><span>Find merchant</span></div>
+          <div class="progress-step"><span class="progress-number">2</span><span>Confirm</span></div>
+          <div class="progress-step"><span class="progress-number">3</span><span>Upload invoice</span></div>
+          <div class="progress-step"><span class="progress-number">4</span><span>Validate</span></div>
         </section>
 
         <section class="main-card">
@@ -55,39 +55,19 @@
                     <input id="supplierName" name="supplierName" value="Adobe Creative Cloud" required />
                   </label>
 
-                  <div class="two-up">
-                    <label>
-                      <span>Request type</span>
-                      <select id="requestType" name="requestType">
-                        <option>Online Purchase</option>
-                        <option>Membership Fee</option>
-                        <option>Travel</option>
-                        <option>Prepayment</option>
-                        <option>Other</option>
-                      </select>
-                    </label>
-
-                    <label>
-                      <span>Country code</span>
-                      <input id="countryCode" name="countryCode" value="US" maxlength="2" />
-                    </label>
-                  </div>
-
-                  <div class="two-up">
-                    <label>
-                      <span>PO number</span>
-                      <input id="poNumber" name="poNumber" value="PO-1001" required />
-                    </label>
-
-                    <label>
-                      <span>Payment supplier on PO</span>
-                      <input id="paymentSupplier" value="Citi via Conferma" disabled />
-                    </label>
-                  </div>
+                  <label>
+                    <span>Request type</span>
+                    <select id="requestType" name="requestType">
+                      <option>Online Purchase</option>
+                      <option>Membership Fee</option>
+                      <option>Travel</option>
+                      <option>Prepayment</option>
+                      <option>Other</option>
+                    </select>
+                  </label>
 
                   <div class="button-row">
-                    <button type="submit" class="action-btn primary">Find merchant</button>
-                    <button type="button" id="reset-demo" class="action-btn secondary">Load MX Edge Case</button>
+                    <button type="submit" class="action-btn primary">Submit</button>
                   </div>
                 </form>
 
@@ -102,17 +82,8 @@
                   </div>
                 </div>
                 <div id="candidate-list" class="candidate-list"></div>
-              </div>
-
-              <div class="subsection">
-                <div class="subsection-header">
-                  <div>
-                    <div class="section-kicker">Confirmed merchant</div>
-                    <h2>Merchant snapshot</h2>
-                  </div>
-                </div>
                 <div id="confirmation-empty" class="empty-state">
-                  We’ll show the confirmed merchant here after you select a suggestion.
+                  We’ll show the suggested merchant here after submission.
                 </div>
                 <div id="confirmation-card" class="hidden"></div>
               </div>
@@ -181,13 +152,6 @@ Country: US</textarea>
                     </label>
                   </div>
 
-                  <div class="two-up">
-                    <label>
-                      <span>Currency</span>
-                      <input id="currency" name="currency" value="USD" />
-                    </label>
-                  </div>
-
                   <div class="button-row">
                     <button type="submit" class="action-btn primary">Run validation</button>
                   </div>
@@ -225,6 +189,16 @@ Country: US</textarea>
                 <div class="technical-copy">
                   This section is for demos and troubleshooting. End users do not need it for the core flow.
                 </div>
+                <div class="subsection-header compact-block">
+                  <div>
+                    <div class="section-kicker">Confirmed merchant</div>
+                    <h2>Merchant snapshot</h2>
+                  </div>
+                </div>
+                <div id="technical-confirmation-empty" class="empty-state">
+                  The confirmed merchant snapshot will appear here after selection.
+                </div>
+                <div id="technical-confirmation-card" class="hidden"></div>
                 <div class="trace-header compact">
                   <div>
                     <div class="section-kicker">Workflow Timeline</div>

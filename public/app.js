@@ -11,9 +11,10 @@ const candidateList = document.querySelector("#candidate-list");
 const discoverySummary = document.querySelector("#discovery-summary");
 const confirmationCard = document.querySelector("#confirmation-card");
 const confirmationEmpty = document.querySelector("#confirmation-empty");
+const technicalConfirmationCard = document.querySelector("#technical-confirmation-card");
+const technicalConfirmationEmpty = document.querySelector("#technical-confirmation-empty");
 const validationResult = document.querySelector("#validation-result");
 const validationEmpty = document.querySelector("#validation-empty");
-const resetDemoButton = document.querySelector("#reset-demo");
 const clearTraceButton = document.querySelector("#clear-trace");
 const apiTrace = document.querySelector("#api-trace");
 const workflowStatus = document.querySelector("#workflow-status");
@@ -171,37 +172,17 @@ function renderCandidates(result) {
   }
 
   for (const candidate of result.candidates) {
-    const [badgeClass, badgeText] = scoreBadge(candidate.confidence);
     const card = document.createElement("article");
     card.className = "candidate-card";
     card.innerHTML = `
       <div class="candidate-top">
         <div>
           <h3>${candidate.canonicalName}</h3>
-          <div class="trace-meta">${candidate.source.replaceAll("_", " ")}</div>
-        </div>
-        <span class="badge ${badgeClass}">${badgeText}</span>
-      </div>
-      <div class="candidate-meta">
-        <div class="stat">
-          <div class="stat-label">Confidence</div>
-          <div class="stat-value">${Math.round(candidate.confidence * 100)}%</div>
-        </div>
-        <div class="stat">
-          <div class="stat-label">Domain</div>
-          <div class="stat-value">${candidate.domain || "Unknown"}</div>
-        </div>
-        <div class="stat">
-          <div class="stat-label">Country</div>
-          <div class="stat-value">${candidate.countryCode || "Unknown"}</div>
-        </div>
-        <div class="stat">
-          <div class="stat-label">MCC</div>
-          <div class="stat-value">${candidate.mcc || "Unknown"}</div>
+          <div class="trace-meta">Suggested merchant</div>
         </div>
       </div>
       <div class="button-row">
-        <button type="button" class="action-btn primary" data-confirm="${candidate.candidateId}">Confirm Merchant</button>
+        <button type="button" class="action-btn primary" data-confirm="${candidate.candidateId}">Confirm</button>
       </div>
     `;
     candidateList.appendChild(card);
@@ -214,20 +195,33 @@ function renderConfirmation(result) {
   setWorkflowStatus("Merchant confirmed");
   confirmationEmpty.classList.add("hidden");
   confirmationCard.classList.remove("hidden");
+  technicalConfirmationEmpty.classList.add("hidden");
+  technicalConfirmationCard.classList.remove("hidden");
   validationEmpty.classList.add("hidden");
 
   const acceptance = result.merchant.acceptance || {};
-  const [badgeClass, badgeText] = acceptanceBadge(acceptance.status);
   const visaRefs = result.merchant.externalReferences?.visa || {};
+  const acceptsCard = acceptance.status === "matched" ? "Accepts card" : "Card acceptance unavailable";
 
   confirmationCard.innerHTML = `
     <article class="detail-card">
       <div class="detail-top">
         <div>
           <h3>${result.merchant.canonicalName}</h3>
+          <div class="trace-meta">${acceptsCard}</div>
+        </div>
+      </div>
+    </article>
+  `;
+
+  technicalConfirmationCard.innerHTML = `
+    <article class="detail-card">
+      <div class="detail-top">
+        <div>
+          <h3>${result.merchant.canonicalName}</h3>
           <div class="trace-meta">Stored on PO ${result.poSnapshot.poNumber}</div>
         </div>
-        <span class="badge ${badgeClass}">${badgeText}</span>
+        <span class="badge ${acceptance.status === "matched" ? "good" : "warn"}">${acceptance.status || "unknown"}</span>
       </div>
       <div class="detail-grid">
         <div class="stat">
@@ -249,10 +243,6 @@ function renderConfirmation(result) {
         <div class="stat">
           <div class="stat-label">Visa merchant ID</div>
           <div class="stat-value">${visaRefs.merchantId || "N/A"}</div>
-        </div>
-        <div class="stat">
-          <div class="stat-label">Card products</div>
-          <div class="stat-value">${acceptance.acceptedCardProducts?.join(", ") || "N/A"}</div>
         </div>
       </div>
     </article>
@@ -376,7 +366,7 @@ async function handleDiscovery(event) {
   const form = new FormData(discoveryForm);
   const payload = {
     supplierName: form.get("supplierName"),
-    countryCode: form.get("countryCode")
+    countryCode: "US"
   };
 
   try {
@@ -407,12 +397,12 @@ async function handleConfirm(candidateId) {
   setWorkflowStatus("Confirming merchant");
   const form = new FormData(discoveryForm);
   const payload = {
-    idempotencyKey: `ui-${form.get("poNumber")}-${candidateId}`,
+    idempotencyKey: `ui-${Date.now()}-${candidateId}`,
     supplierName: form.get("supplierName"),
     selectedCandidateId: candidateId,
-    countryCode: String(form.get("countryCode") || "").toUpperCase(),
+    countryCode: "US",
     requestType: form.get("requestType"),
-    poNumber: form.get("poNumber")
+    poNumber: "PO-DEMO-001"
   };
 
   try {
@@ -502,12 +492,12 @@ async function handleValidation(event) {
   const form = new FormData(validationForm);
   const discoveryFormData = new FormData(discoveryForm);
   const payload = {
-    poNumber: discoveryFormData.get("poNumber"),
+    poNumber: "PO-DEMO-001",
     requestType: discoveryFormData.get("requestType"),
     descriptor: form.get("descriptor"),
     mcc: form.get("mcc"),
     amount: Number(form.get("amount")),
-    currency: form.get("currency"),
+    currency: "USD",
     invoiceText: form.get("invoiceText")
   };
 
@@ -529,27 +519,6 @@ async function handleValidation(event) {
     setMessage(error.message || "Validation failed");
     setWorkflowStatus("Validation failed");
   }
-}
-
-function loadMxScenario() {
-  document.querySelector("#supplierName").value = "Mercado Libre";
-  document.querySelector("#countryCode").value = "MX";
-  document.querySelector("#requestType").value = "Online Purchase";
-  document.querySelector("#poNumber").value = "PO-2001";
-  document.querySelector("#descriptor").value = "MERCADOLIBRE";
-  document.querySelector("#mcc").value = "5311";
-  document.querySelector("#amount").value = "120.00";
-  document.querySelector("#currency").value = "USD";
-  document.querySelector("#invoiceText").value = `Invoice From: Mercado Libre Mexico S. de R.L. de C.V.
-Website: mercadolibre.com.mx
-Amount Due: 120.00 USD
-Invoice Date: 2026-04-16
-Country: MX`;
-  dropFileName.textContent = "No file selected";
-  scanSummary.className = "empty-state";
-  scanSummary.textContent = "No invoice uploaded yet. Supported prototype formats: PDF, DOCX, TXT, MD.";
-  setMessage("Loaded unsupported-country demo scenario for Mexico.", "info");
-  setWorkflowStatus("Draft");
 }
 
 function setSelectedFile(file) {
@@ -603,7 +572,6 @@ candidateList.addEventListener("click", (event) => {
 
 discoveryForm.addEventListener("submit", handleDiscovery);
 validationForm.addEventListener("submit", handleValidation);
-resetDemoButton.addEventListener("click", loadMxScenario);
 scanInvoiceButton.addEventListener("click", handleInvoiceScan);
 clearTraceButton.addEventListener("click", () => {
   apiTrace.innerHTML = "";

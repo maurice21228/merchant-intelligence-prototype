@@ -24,6 +24,7 @@ body {
   font-family: "Segoe UI", Arial, sans-serif;
   background: var(--bg);
   color: var(--text);
+  overflow-x: hidden;
 }
 
 .shell {
@@ -89,9 +90,9 @@ body {
 }
 
 .page-simple {
-  max-width: 1440px;
+  max-width: 1320px;
   margin: 0 auto;
-  padding: 24px 28px 40px;
+  padding: 18px 20px 32px;
 }
 
 .hero-card,
@@ -113,13 +114,13 @@ body {
   justify-content: space-between;
   gap: 24px;
   align-items: start;
-  padding: 26px 28px;
-  margin-bottom: 18px;
+  padding: 20px 22px;
+  margin-bottom: 14px;
 }
 
 .hero-card h1 {
   margin: 0 0 10px;
-  font-size: 2.2rem;
+  font-size: 1.8rem;
 }
 
 .hero-copy {
@@ -156,19 +157,24 @@ body {
 .progress-card {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
-  padding: 16px;
-  margin-bottom: 18px;
+  gap: 10px;
+  padding: 12px;
+  margin-bottom: 14px;
 }
 
 .progress-step {
-  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 12px;
   text-align: center;
   border: 1px solid #c4d5eb;
   border-radius: 999px;
   background: var(--surface-soft);
   color: #526b88;
   font-weight: 600;
+  font-size: 0.95rem;
 }
 
 .progress-step.active {
@@ -176,19 +182,38 @@ body {
   background: var(--blue-soft);
 }
 
+.progress-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: #d7e6fb;
+  color: #0d4d9d;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
 .main-card {
-  padding: 22px;
+  padding: 16px;
+  overflow: hidden;
 }
 
 .simple-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.75fr) minmax(300px, 0.75fr);
-  gap: 24px;
+  grid-template-columns: minmax(0, 1.5fr) minmax(280px, 360px);
+  gap: 16px;
+}
+
+.work-card,
+.side-stack {
+  min-width: 0;
 }
 
 .subsection {
-  padding-bottom: 22px;
-  margin-bottom: 22px;
+  padding-bottom: 18px;
+  margin-bottom: 18px;
   border-bottom: 1px solid var(--line);
 }
 
@@ -207,8 +232,8 @@ body {
 
 .simple-form {
   display: grid;
-  gap: 14px;
-  margin-top: 12px;
+  gap: 12px;
+  margin-top: 10px;
 }
 
 .simple-form label {
@@ -232,18 +257,18 @@ textarea {
   background: white;
   color: var(--text);
   border-radius: 8px;
-  padding: 12px 14px;
+  padding: 10px 12px;
 }
 
 textarea {
   resize: vertical;
-  min-height: 180px;
+  min-height: 150px;
 }
 
 .two-up,
 .three-up {
   display: grid;
-  gap: 14px;
+  gap: 12px;
 }
 
 .two-up {
@@ -289,7 +314,8 @@ textarea {
 .candidate-card,
 .detail-card,
 .score-card {
-  padding: 16px 18px;
+  padding: 14px 16px;
+  overflow: hidden;
 }
 
 .candidate-top,
@@ -308,7 +334,7 @@ textarea {
 .invoice-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
+  gap: 10px;
 }
 
 .stat,
@@ -365,9 +391,9 @@ textarea {
 .upload-panel {
   display: flex;
   justify-content: space-between;
-  gap: 18px;
-  padding: 18px;
-  margin: 8px 0 18px;
+  gap: 14px;
+  padding: 14px;
+  margin: 8px 0 14px;
   background: var(--surface-soft);
   border: 1px solid var(--line);
   border-radius: 10px;
@@ -383,14 +409,14 @@ textarea {
   display: grid;
   gap: 12px;
   align-content: start;
-  min-width: 260px;
+  min-width: 220px;
 }
 
 .drop-zone {
   border: 2px dashed #b8cadf;
   background: white;
-  padding: 18px;
-  min-width: 280px;
+  padding: 14px;
+  min-width: 220px;
   text-align: center;
   border-radius: 10px;
   cursor: pointer;
@@ -431,7 +457,7 @@ textarea {
 
 .side-stack {
   display: grid;
-  gap: 18px;
+  gap: 14px;
   align-self: start;
   position: sticky;
   top: 16px;
@@ -439,7 +465,12 @@ textarea {
 
 .summary-card,
 .technical-panel {
-  padding: 18px;
+  padding: 14px;
+  min-width: 0;
+}
+
+.compact-block {
+  margin: 14px 0 10px;
 }
 
 .technical-panel summary {
@@ -461,22 +492,25 @@ textarea {
 }
 
 .trace-item {
-  padding: 16px 18px;
+  padding: 12px 14px;
   border: 1px solid var(--line);
   border-left: 4px solid #c9d7e6;
   border-radius: 10px;
   background: var(--surface-soft);
+  overflow: hidden;
 }
 
 .trace-code {
   margin: 10px 0 0;
-  padding: 14px;
+  padding: 12px;
   background: var(--trace-bg);
   color: #eef4fb;
   overflow: auto;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   line-height: 1.45;
   border-radius: 8px;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .timeline-title {
@@ -489,18 +523,25 @@ textarea {
   line-height: 1.45;
 }
 
-@media (max-width: 1200px) {
-  .simple-grid,
-  .progress-card {
+@media (max-width: 1280px) {
+  .simple-grid {
     grid-template-columns: 1fr;
   }
 
   .side-stack {
     position: static;
   }
+
+  .progress-card {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 900px) {
+  .page-simple {
+    padding: 14px 12px 24px;
+  }
+
   .hero-card,
   .upload-panel,
   .candidate-top,
@@ -511,12 +552,33 @@ textarea {
     flex-direction: column;
   }
 
+  .hero-card h1 {
+    font-size: 1.5rem;
+  }
+
   .two-up,
   .three-up,
   .candidate-meta,
   .detail-grid,
   .breakdown-grid,
-  .invoice-grid {
+  .invoice-grid,
+  .progress-card {
     grid-template-columns: 1fr;
+  }
+
+  .drop-zone,
+  .upload-controls {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 1200px) {
+  .simple-grid,
+  .progress-card {
+    grid-template-columns: 1fr;
+  }
+
+  .side-stack {
+    position: static;
   }
 }
