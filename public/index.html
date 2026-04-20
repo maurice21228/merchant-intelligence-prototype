@@ -32,16 +32,31 @@
         </section>
 
         <section class="progress-card">
-          <div class="progress-step active"><span class="progress-number">1</span><span>Find merchant</span></div>
-          <div class="progress-step"><span class="progress-number">2</span><span>Confirm</span></div>
-          <div class="progress-step"><span class="progress-number">3</span><span>Upload invoice</span></div>
-          <div class="progress-step"><span class="progress-number">4</span><span>Validate</span></div>
+          <div class="progress-node complete">
+            <div class="progress-circle">1</div>
+            <div class="progress-label">Find merchant</div>
+          </div>
+          <div class="progress-line complete"></div>
+          <div class="progress-node active">
+            <div class="progress-circle">2</div>
+            <div class="progress-label">Confirm</div>
+          </div>
+          <div class="progress-line"></div>
+          <div class="progress-node">
+            <div class="progress-circle">3</div>
+            <div class="progress-label">Upload invoice</div>
+          </div>
+          <div class="progress-line"></div>
+          <div class="progress-node">
+            <div class="progress-circle">4</div>
+            <div class="progress-label">Validate</div>
+          </div>
         </section>
 
         <section class="main-card">
           <div class="simple-grid">
             <section class="work-card">
-              <div class="subsection">
+              <section class="step-card">
                 <div class="subsection-header">
                   <div>
                     <div class="section-kicker">Step 1</div>
@@ -50,11 +65,6 @@
                 </div>
 
                 <form id="discovery-form" class="simple-form">
-                  <label>
-                    <span>Supplier name</span>
-                    <input id="supplierName" name="supplierName" value="Adobe Creative Cloud" required />
-                  </label>
-
                   <label>
                     <span>Request type</span>
                     <select id="requestType" name="requestType">
@@ -66,15 +76,20 @@
                     </select>
                   </label>
 
+                  <label>
+                    <span>Supplier name</span>
+                    <input id="supplierName" name="supplierName" value="Adobe Creative Cloud" required />
+                  </label>
+
                   <div class="button-row">
                     <button type="submit" class="action-btn primary">Submit</button>
                   </div>
                 </form>
 
                 <div id="discovery-summary" class="message hidden"></div>
-              </div>
+              </section>
 
-              <div class="subsection">
+              <section class="step-card">
                 <div class="subsection-header">
                   <div>
                     <div class="section-kicker">Step 2</div>
@@ -86,9 +101,9 @@
                   We’ll show the suggested merchant here after submission.
                 </div>
                 <div id="confirmation-card" class="hidden"></div>
-              </div>
+              </section>
 
-              <div class="subsection">
+              <section class="step-card">
                 <div class="subsection-header">
                   <div>
                     <div class="section-kicker">Step 3</div>
@@ -99,7 +114,7 @@
                 <div class="upload-panel simple-upload">
                   <div class="upload-copy">
                     <h3>Upload and scan invoice</h3>
-                    <p>Upload a PDF, DOCX, text file, or invoice image. The prototype will extract the text for validation.</p>
+                    <p>Upload a PDF, DOCX, text file, or invoice image.</p>
                   </div>
                   <div class="upload-controls">
                     <div id="drop-zone" class="drop-zone" tabindex="0">
@@ -115,9 +130,9 @@
                 <div id="scan-summary" class="empty-state">
                   No invoice uploaded yet. Supported prototype formats: PDF, DOCX, TXT, MD, PNG, JPG.
                 </div>
-              </div>
+              </section>
 
-              <div class="subsection">
+              <section class="step-card">
                 <div class="subsection-header">
                   <div>
                     <div class="section-kicker">Step 4</div>
@@ -135,7 +150,7 @@ Invoice Date: 2026-04-16
 Country: US</textarea>
                   </label>
 
-                  <div class="three-up">
+                  <div class="two-up">
                     <label>
                       <span>Statement descriptor</span>
                       <input id="descriptor" name="descriptor" value="ADOBE *CREATIVE CLD" />
@@ -145,12 +160,12 @@ Country: US</textarea>
                       <span>MCC</span>
                       <input id="mcc" name="mcc" value="5734" />
                     </label>
-
-                    <label>
-                      <span>Amount</span>
-                      <input id="amount" name="amount" type="number" step="0.01" value="59.99" />
-                    </label>
                   </div>
+
+                  <label>
+                    <span>Amount</span>
+                    <input id="amount" name="amount" type="number" step="0.01" value="59.99" />
+                  </label>
 
                   <div class="button-row">
                     <button type="submit" class="action-btn primary">Run validation</button>
@@ -161,7 +176,7 @@ Country: US</textarea>
                   Confirm a merchant first, then run validation.
                 </div>
                 <div id="validation-result" class="hidden"></div>
-              </div>
+              </section>
             </section>
 
             <aside class="side-stack">
@@ -184,11 +199,11 @@ Country: US</textarea>
                 </div>
               </section>
 
-              <details class="technical-panel">
-                <summary>Technical details</summary>
-                <div class="technical-copy">
+              <section class="technical-panel">
+                <div class="section-kicker">Technical details</div>
+                <p class="technical-copy">
                   This section is for demos and troubleshooting. End users do not need it for the core flow.
-                </div>
+                </p>
                 <div class="subsection-header compact-block">
                   <div>
                     <div class="section-kicker">Confirmed merchant</div>
@@ -199,15 +214,16 @@ Country: US</textarea>
                   The confirmed merchant snapshot will appear here after selection.
                 </div>
                 <div id="technical-confirmation-card" class="hidden"></div>
+
                 <div class="trace-header compact">
                   <div>
-                    <div class="section-kicker">Workflow Timeline</div>
+                    <div class="section-kicker">Workflow timeline</div>
                     <h2>Execution timeline</h2>
                   </div>
                   <button type="button" id="clear-trace" class="clear-btn">Clear</button>
                 </div>
                 <div id="api-trace" class="trace-list"></div>
-              </details>
+              </section>
             </aside>
           </div>
         </section>
