@@ -193,6 +193,7 @@ function renderConfirmation(result) {
   state.confirmed = result;
   updateDecisionSummary();
   setWorkflowStatus("Merchant confirmed");
+  candidateList.innerHTML = "";
   confirmationEmpty.classList.add("hidden");
   confirmationCard.classList.remove("hidden");
   technicalConfirmationEmpty.classList.add("hidden");
@@ -225,8 +226,8 @@ function renderConfirmation(result) {
       </div>
       <div class="detail-grid">
         <div class="stat">
-          <div class="stat-label">Merchant ID</div>
-          <div class="stat-value">${result.merchant.id}</div>
+          <div class="stat-label">Visa merchant ID</div>
+          <div class="stat-value">${visaRefs.merchantId || "N/A"}</div>
         </div>
         <div class="stat">
           <div class="stat-label">Domain</div>
@@ -237,12 +238,12 @@ function renderConfirmation(result) {
           <div class="stat-value">${result.merchant.countryCode || "Unknown"}</div>
         </div>
         <div class="stat">
-          <div class="stat-label">Acceptance status</div>
-          <div class="stat-value">${acceptance.status || "Not checked"}</div>
+          <div class="stat-label">MCC</div>
+          <div class="stat-value">${result.merchant.mcc || "Unknown"}</div>
         </div>
         <div class="stat">
-          <div class="stat-label">Visa merchant ID</div>
-          <div class="stat-value">${visaRefs.merchantId || "N/A"}</div>
+          <div class="stat-label">Acceptance status</div>
+          <div class="stat-value">${acceptance.status || "Not checked"}</div>
         </div>
       </div>
     </article>
