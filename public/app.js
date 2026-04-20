@@ -22,6 +22,7 @@ const decisionSummary = document.querySelector("#decision-summary");
 const invoiceFileInput = document.querySelector("#invoiceFile");
 const scanInvoiceButton = document.querySelector("#scan-invoice");
 const scanSummary = document.querySelector("#scan-summary");
+const invoiceEvidenceCard = document.querySelector("#invoice-evidence-card");
 const dropZone = document.querySelector("#drop-zone");
 const dropFileName = document.querySelector("#drop-file-name");
 
@@ -319,11 +320,34 @@ function renderScanSummary(scanResult) {
       </div>
       <div class="stat">
         <div class="stat-label">Amount</div>
-        <div class="stat-value">${scanResult.invoiceEvidence.amount || "Not found"}</div>
+        <div class="stat-value">${scanResult.invoiceEvidence.amount ?? "Not found"}</div>
       </div>
       <div class="stat">
         <div class="stat-label">Country</div>
         <div class="stat-value">${scanResult.invoiceEvidence.countryCode || "Not found"}</div>
+      </div>
+    </div>
+  `;
+
+  invoiceEvidenceCard.className = "empty-state";
+  invoiceEvidenceCard.innerHTML = `
+    <div class="section-kicker">Extracted invoice evidence</div>
+    <div class="detail-grid">
+      <div class="stat">
+        <div class="stat-label">Merchant</div>
+        <div class="stat-value">${scanResult.invoiceEvidence.merchantName || "Not found"}</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Amount</div>
+        <div class="stat-value">${scanResult.invoiceEvidence.amount ?? "Not found"}</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Domain</div>
+        <div class="stat-value">${scanResult.invoiceEvidence.domain || "Not found"}</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Invoice date</div>
+        <div class="stat-value">${scanResult.invoiceEvidence.invoiceDate || "Not found"}</div>
       </div>
     </div>
   `;
@@ -355,6 +379,8 @@ function resetTransientState() {
   validationEmpty.classList.remove("hidden");
   scanSummary.className = "empty-state";
   scanSummary.textContent = "No invoice uploaded yet. Supported prototype formats: PDF, DOCX, TXT, MD.";
+  invoiceEvidenceCard.className = "empty-state";
+  invoiceEvidenceCard.textContent = "Upload an invoice to extract the merchant, amount, and other validation evidence.";
 }
 
 async function handleDiscovery(event) {
@@ -463,6 +489,9 @@ async function handleInvoiceScan() {
     });
 
     document.querySelector("#invoiceText").value = result.document.text || "";
+    if (result.invoiceEvidence.amount !== null && result.invoiceEvidence.amount !== undefined) {
+      document.querySelector("#amount").value = result.invoiceEvidence.amount;
+    }
     state.uploadedInvoice = result;
     dropFileName.textContent = file.name;
     renderScanSummary(result);
@@ -507,7 +536,15 @@ async function handleValidation(event) {
     addTimelineStep({
       title: "Transaction intelligence scoring",
       body: `Validation finished with ${result.outcome} at ${result.confidence}% confidence.`,
-      requestPayload: payload,
+      requestPayload: {
+        poNumber: payload.poNumber,
+        requestType: payload.requestType,
+        descriptor: payload.descriptor,
+        mcc: payload.mcc,
+        amount: payload.amount,
+        currency: payload.currency,
+        invoiceEvidence: state.uploadedInvoice?.invoiceEvidence || null
+      },
       responsePayload: {
         outcome: result.outcome,
         confidence: result.confidence,

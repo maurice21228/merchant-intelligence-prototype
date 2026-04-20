@@ -149,14 +149,15 @@
               </div>
 
               <form id="validation-form" class="form-stack">
-                <label class="field">
-                  <span>Invoice text</span>
-                  <textarea id="invoiceText" name="invoiceText" rows="8">Invoice From: Adobe Inc.
+                <textarea id="invoiceText" name="invoiceText" class="visually-hidden">Invoice From: Adobe Inc.
 Website: adobe.com
 Amount Due: 59.99 USD
 Invoice Date: 2026-04-16
 Country: US</textarea>
-                </label>
+
+                <div id="invoice-evidence-card" class="empty-state">
+                  Upload an invoice to extract the merchant, amount, and other validation evidence.
+                </div>
 
                 <div class="field-grid">
                   <label class="field">
