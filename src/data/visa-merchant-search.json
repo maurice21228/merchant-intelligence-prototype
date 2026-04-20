@@ -1,0 +1,80 @@
+[
+  {
+    "providerCandidateId": "visa-search-adobe-us",
+    "canonicalName": "Adobe Inc.",
+    "aliases": [
+      "Adobe",
+      "Adobe Creative Cloud",
+      "Adobe Systems"
+    ],
+    "domain": "adobe.com",
+    "countryCode": "US",
+    "mcc": "5734",
+    "confidence": 0.93,
+    "externalReferences": {
+      "visa": {
+        "merchantId": "vm_001",
+        "storeId": "vs_001",
+        "enterpriseId": "ve_001"
+      }
+    }
+  },
+  {
+    "providerCandidateId": "visa-search-linkedin-ie",
+    "canonicalName": "LinkedIn Ireland Unlimited Company",
+    "aliases": [
+      "LinkedIn",
+      "LinkedIn Premium",
+      "LinkedIn Learning"
+    ],
+    "domain": "linkedin.com",
+    "countryCode": "IE",
+    "mcc": "7392",
+    "confidence": 0.91,
+    "externalReferences": {
+      "visa": {
+        "merchantId": "vm_002",
+        "storeId": "vs_002",
+        "enterpriseId": "ve_002"
+      }
+    }
+  },
+  {
+    "providerCandidateId": "visa-search-airbnb-uk",
+    "canonicalName": "Airbnb Payments UK Ltd",
+    "aliases": [
+      "Airbnb",
+      "Airbnb UK"
+    ],
+    "domain": "airbnb.com",
+    "countryCode": "GB",
+    "mcc": "7011",
+    "confidence": 0.84,
+    "externalReferences": {
+      "visa": {
+        "merchantId": "vm_003",
+        "storeId": "vs_003",
+        "enterpriseId": "ve_003"
+      }
+    }
+  },
+  {
+    "providerCandidateId": "visa-search-mercadolibre-mx",
+    "canonicalName": "Mercado Libre Mexico S. de R.L. de C.V.",
+    "aliases": [
+      "Mercado Libre",
+      "MercadoLibre"
+    ],
+    "domain": "mercadolibre.com.mx",
+    "countryCode": "MX",
+    "mcc": "5311",
+    "confidence": 0.8,
+    "externalReferences": {
+      "visa": {
+        "merchantId": "vm_004",
+        "storeId": "vs_004",
+        "enterpriseId": "ve_004"
+      }
+    }
+  }
+]

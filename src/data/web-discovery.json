@@ -1,0 +1,15 @@
+[
+  {
+    "providerCandidateId": "web-mercadolibre-mx",
+    "canonicalName": "Mercado Libre Mexico S. de R.L. de C.V.",
+    "aliases": [
+      "Mercado Libre",
+      "MercadoLibre"
+    ],
+    "domain": "mercadolibre.com.mx",
+    "countryCode": "MX",
+    "mcc": "5311",
+    "confidence": 0.72,
+    "externalReferences": {}
+  }
+]

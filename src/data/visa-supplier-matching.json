@@ -1,0 +1,30 @@
+[
+  {
+    "merchantId": "vm_001",
+    "countryCode": "US",
+    "supportsCommercialCards": true,
+    "matchConfidence": 0.95,
+    "acceptedCardProducts": [
+      "Visa Commercial",
+      "Visa Purchasing"
+    ]
+  },
+  {
+    "merchantId": "vm_002",
+    "countryCode": "IE",
+    "supportsCommercialCards": true,
+    "matchConfidence": 0.89,
+    "acceptedCardProducts": [
+      "Visa Commercial"
+    ]
+  },
+  {
+    "merchantId": "vm_003",
+    "countryCode": "GB",
+    "supportsCommercialCards": true,
+    "matchConfidence": 0.9,
+    "acceptedCardProducts": [
+      "Visa Commercial"
+    ]
+  }
+]

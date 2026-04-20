@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Merchant Intelligence Prototype</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <header class="app-header">
+        <div class="app-title">Form <span class="dot">|</span> Credit Card Transaction</div>
+        <div class="app-actions">
+          <button class="header-btn secondary" type="button">Close</button>
+          <button class="header-btn primary" type="button">Add And Go To Cart</button>
+        </div>
+      </header>
+
+      <div class="page">
+        <main class="content">
+          <section class="jaggaer-card intro-card">
+            <h2>Purpose and Use</h2>
+            <p>This form is used for requesting credit card purchases.</p>
+          </section>
+
+          <section class="jaggaer-card form-card">
+            <div class="section-header">
+              <div>
+                <div class="section-kicker">Purchase request</div>
+                <h1>Create Card Payment Request</h1>
+              </div>
+              <div class="status-wrap">
+                <span class="section-kicker">Current State</span>
+                <span id="workflow-status" class="status-pill">Draft</span>
+              </div>
+            </div>
+
+            <div class="stage-strip">
+              <div class="stage active">1. Merchant discovery</div>
+              <div class="stage">2. Confirm merchant</div>
+              <div class="stage">3. Validate posted transaction</div>
+            </div>
+
+            <div class="subsection">
+              <div class="subsection-header">
+                <h2>Order Information</h2>
+                <span class="helper-pill">Employee-facing confirmation stays minimal</span>
+              </div>
+
+              <form id="discovery-form" class="j-form">
+                <div class="form-row">
+                  <label class="field-label" for="supplierName">Vendor</label>
+                  <div class="field-control field-control-wide">
+                    <input id="supplierName" name="supplierName" value="Adobe Creative Cloud" required />
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="field-label" for="countryCode">Country Code</label>
+                  <div class="field-control field-control-small">
+                    <input id="countryCode" name="countryCode" value="US" maxlength="2" />
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="field-label" for="requestType">Request Type</label>
+                  <div class="field-control field-control-medium">
+                    <select id="requestType" name="requestType">
+                      <option>Online Purchase</option>
+                      <option>Membership Fee</option>
+                      <option>Travel</option>
+                      <option>Prepayment</option>
+                      <option>Other</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="field-label" for="poNumber">Catalog No.</label>
+                  <div class="field-control field-control-medium">
+                    <input id="poNumber" name="poNumber" value="PO-1001" required />
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="field-label" for="paymentSupplier">Payment Supplier on PO</label>
+                  <div class="field-control field-control-medium">
+                    <input id="paymentSupplier" value="Citi via Conferma" disabled />
+                  </div>
+                </div>
+
+                <div class="button-row">
+                  <button type="submit" class="action-btn primary">Discover Merchant</button>
+                  <button type="button" id="reset-demo" class="action-btn secondary">Load MX Edge Case</button>
+                </div>
+              </form>
+
+              <div id="discovery-summary" class="message hidden"></div>
+            </div>
+
+            <div class="subsection">
+              <div class="subsection-header">
+                <h2>Suggested Merchant</h2>
+                <span class="helper-pill">Graph first, then Visa Merchant Search</span>
+              </div>
+              <div id="candidate-list" class="candidate-list"></div>
+            </div>
+
+            <div class="subsection">
+              <div class="subsection-header">
+                <h2>Confirmed Merchant Snapshot</h2>
+                <span class="helper-pill">Supplier Matching after confirmation</span>
+              </div>
+              <div id="confirmation-empty" class="empty-state">
+                Confirm a suggested merchant to save the PO merchant snapshot and enrich card acceptance.
+              </div>
+              <div id="confirmation-card" class="hidden"></div>
+            </div>
+
+            <div class="subsection">
+              <div class="subsection-header">
+                <h2>Posted Transaction Validation</h2>
+                <span class="helper-pill">Invoice evidence included before validation</span>
+              </div>
+
+              <div class="upload-panel">
+                <div class="upload-copy">
+                  <div class="section-kicker">Invoice upload</div>
+                  <h3>Upload and Scan Invoice</h3>
+                  <p>
+                    Upload a text-searchable invoice or receipt file. The prototype reads the document locally
+                    and runs a mocked LLM-style scan before validation.
+                  </p>
+                </div>
+                <div class="upload-controls">
+                  <div id="drop-zone" class="drop-zone" tabindex="0">
+                    <div class="drop-title">Drag and drop invoice here</div>
+                    <div class="drop-subtitle">or click to browse PDF, DOCX, TXT, MD, PNG, JPG</div>
+                    <div id="drop-file-name" class="drop-file-name">No file selected</div>
+                  </div>
+                  <input id="invoiceFile" class="visually-hidden" type="file" accept=".pdf,.docx,.txt,.md,.png,.jpg,.jpeg,.bmp,.gif,.webp" />
+                  <button type="button" id="scan-invoice" class="action-btn secondary">Upload And Scan</button>
+                </div>
+              </div>
+
+              <div id="scan-summary" class="empty-state">
+                No invoice uploaded yet. Supported prototype formats: PDF, DOCX, TXT, MD.
+              </div>
+
+              <form id="validation-form" class="j-form">
+                <div class="form-row">
+                  <label class="field-label" for="descriptor">Statement Descriptor</label>
+                  <div class="field-control field-control-wide">
+                    <input id="descriptor" name="descriptor" value="ADOBE *CREATIVE CLD" />
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="field-label" for="mcc">MCC</label>
+                  <div class="field-control field-control-small">
+                    <input id="mcc" name="mcc" value="5734" />
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="field-label" for="amount">Amount</label>
+                  <div class="field-control field-control-small">
+                    <input id="amount" name="amount" type="number" step="0.01" value="59.99" />
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="field-label" for="currency">Currency</label>
+                  <div class="field-control field-control-small">
+                    <input id="currency" name="currency" value="USD" />
+                  </div>
+                </div>
+
+                <div class="form-row form-row-top">
+                  <label class="field-label" for="invoiceText">Description</label>
+                  <div class="field-control field-control-textarea">
+                    <textarea id="invoiceText" name="invoiceText" rows="8">Invoice From: Adobe Inc.
+Website: adobe.com
+Amount Due: 59.99 USD
+Invoice Date: 2026-04-16
+Country: US</textarea>
+                    <div class="field-note">The scan will populate this field. You can still edit it before validation.</div>
+                  </div>
+                </div>
+
+                <div class="button-row">
+                  <button type="submit" class="action-btn primary">Run Validation</button>
+                </div>
+              </form>
+
+              <div id="validation-empty" class="empty-state">
+                Confirm a merchant first, then run validation to see the scoring outcome.
+              </div>
+              <div id="validation-result" class="hidden"></div>
+            </div>
+          </section>
+        </main>
+
+        <aside class="sidebar">
+          <section class="trace-card">
+            <div class="trace-header">
+              <div>
+                <div class="section-kicker">Workflow Timeline</div>
+                <h2>Execution Timeline</h2>
+              </div>
+              <button type="button" id="clear-trace" class="clear-btn">Clear</button>
+            </div>
+            <p class="trace-copy">
+              This panel shows the step-by-step workflow, including discovery, acceptance enrichment,
+              invoice scan, and validation.
+            </p>
+            <div id="api-trace" class="trace-list"></div>
+          </section>
+
+          <section class="trace-card">
+            <div class="section-kicker">Architecture</div>
+            <h2>Live Decision Summary</h2>
+            <div id="decision-summary" class="summary-grid">
+              <div class="summary-item">
+                <div class="summary-label">Merchant Discovery</div>
+                <div class="summary-value">Pending</div>
+              </div>
+              <div class="summary-item">
+                <div class="summary-label">Acceptance Data</div>
+                <div class="summary-value">Pending</div>
+              </div>
+              <div class="summary-item">
+                <div class="summary-label">Validation Outcome</div>
+                <div class="summary-value">Pending</div>
+              </div>
+            </div>
+          </section>
+        </aside>
+      </div>
+    </div>
+
+    <script src="/app.js" type="module"></script>
+  </body>
+  </html>

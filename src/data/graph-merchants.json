@@ -1,0 +1,40 @@
+[
+  {
+    "id": "m_graph_linkedin_ie",
+    "canonicalName": "LinkedIn Ireland Unlimited Company",
+    "aliases": [
+      "LinkedIn",
+      "LinkedIn Premium",
+      "LinkedIn Learning"
+    ],
+    "domain": "linkedin.com",
+    "countryCode": "IE",
+    "mcc": "7392",
+    "descriptors": [
+      "LINKEDIN IRELAND"
+    ],
+    "acceptance": null,
+    "externalReferences": {},
+    "confidenceHistory": [],
+    "source": "graph"
+  },
+  {
+    "id": "m_graph_microsoft_us",
+    "canonicalName": "Microsoft Corporation",
+    "aliases": [
+      "Microsoft",
+      "Azure",
+      "Microsoft Azure"
+    ],
+    "domain": "microsoft.com",
+    "countryCode": "US",
+    "mcc": "7372",
+    "descriptors": [
+      "MICROSOFT*AZURE"
+    ],
+    "acceptance": null,
+    "externalReferences": {},
+    "confidenceHistory": [],
+    "source": "graph"
+  }
+]
