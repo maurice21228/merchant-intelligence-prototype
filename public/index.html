@@ -9,223 +9,231 @@
   <body>
     <div class="shell">
       <header class="app-header">
-        <div class="app-title">Form <span class="dot">|</span> Credit Card Transaction</div>
+        <div class="app-title-group">
+          <div class="app-title">Form <span class="dot">|</span> Credit Card Transaction</div>
+          <div class="app-subtitle">Merchant intelligence prototype</div>
+        </div>
         <div class="app-actions">
           <button class="header-btn secondary" type="button">Close</button>
           <button class="header-btn primary" type="button">Add And Go To Cart</button>
         </div>
       </header>
 
-      <main class="page-simple">
-        <section class="hero-card">
-          <div>
-            <div class="section-kicker">Purchase request</div>
+      <main class="page">
+        <section class="hero-panel">
+          <div class="hero-copy">
+            <div class="eyebrow">Purchase Request</div>
             <h1>Create Card Payment Request</h1>
-            <p class="hero-copy">
-              Enter the supplier, confirm the suggested merchant, upload the invoice, and run validation.
+            <p>
+              Submit a supplier, review the suggested merchant, upload the invoice, and validate the
+              posted transaction.
             </p>
           </div>
-          <div class="hero-status">
-            <div class="section-kicker">Current State</div>
-            <div id="workflow-status" class="status-pill">Draft</div>
+          <div class="hero-state">
+            <div class="eyebrow">Current State</div>
+            <div id="workflow-status" class="state-pill">Draft</div>
           </div>
         </section>
 
-        <section class="progress-card">
-          <div class="progress-node complete">
-            <div class="progress-circle">1</div>
-            <div class="progress-label">Find merchant</div>
+        <section class="progress-panel" aria-label="Workflow progress">
+          <div class="progress-step is-active">
+            <div class="progress-step-circle">1</div>
+            <div class="progress-step-label">Find merchant</div>
           </div>
-          <div class="progress-line complete"></div>
-          <div class="progress-node active">
-            <div class="progress-circle">2</div>
-            <div class="progress-label">Confirm</div>
+          <div class="progress-step-line is-active"></div>
+          <div class="progress-step">
+            <div class="progress-step-circle">2</div>
+            <div class="progress-step-label">Confirm</div>
           </div>
-          <div class="progress-line"></div>
-          <div class="progress-node">
-            <div class="progress-circle">3</div>
-            <div class="progress-label">Upload invoice</div>
+          <div class="progress-step-line"></div>
+          <div class="progress-step">
+            <div class="progress-step-circle">3</div>
+            <div class="progress-step-label">Upload invoice</div>
           </div>
-          <div class="progress-line"></div>
-          <div class="progress-node">
-            <div class="progress-circle">4</div>
-            <div class="progress-label">Validate</div>
+          <div class="progress-step-line"></div>
+          <div class="progress-step">
+            <div class="progress-step-circle">4</div>
+            <div class="progress-step-label">Validate</div>
           </div>
         </section>
 
-        <section class="main-card">
-          <div class="simple-grid">
-            <section class="work-card">
-              <section class="step-card">
-                <div class="subsection-header">
-                  <div>
-                    <div class="section-kicker">Step 1</div>
-                    <h2>Supplier details</h2>
-                  </div>
+        <section class="layout">
+          <div class="main-column">
+            <section class="step-card">
+              <div class="step-header">
+                <div>
+                  <div class="step-kicker">Step 1</div>
+                  <h2>Supplier details</h2>
+                  <p class="step-copy">Start with the request type and supplier name.</p>
                 </div>
+              </div>
 
-                <form id="discovery-form" class="simple-form">
-                  <label>
-                    <span>Request type</span>
-                    <select id="requestType" name="requestType">
-                      <option>Online Purchase</option>
-                      <option>Membership Fee</option>
-                      <option>Travel</option>
-                      <option>Prepayment</option>
-                      <option>Other</option>
-                    </select>
-                  </label>
+              <form id="discovery-form" class="form-stack">
+                <label class="field">
+                  <span>Request type</span>
+                  <select id="requestType" name="requestType">
+                    <option>Online Purchase</option>
+                    <option>Membership Fee</option>
+                    <option>Travel</option>
+                    <option>Prepayment</option>
+                    <option>Other</option>
+                  </select>
+                </label>
 
-                  <label>
-                    <span>Supplier name</span>
-                    <input id="supplierName" name="supplierName" value="Adobe Creative Cloud" required />
-                  </label>
+                <label class="field">
+                  <span>Supplier name</span>
+                  <input id="supplierName" name="supplierName" value="Adobe Creative Cloud" required />
+                </label>
 
-                  <div class="button-row">
-                    <button type="submit" class="action-btn primary">Submit</button>
-                  </div>
-                </form>
-
-                <div id="discovery-summary" class="message hidden"></div>
-              </section>
-
-              <section class="step-card">
-                <div class="subsection-header">
-                  <div>
-                    <div class="section-kicker">Step 2</div>
-                    <h2>Suggested merchant</h2>
-                  </div>
+                <div class="button-row">
+                  <button type="submit" class="action-btn primary">Submit</button>
                 </div>
-                <div id="candidate-list" class="candidate-list"></div>
-                <div id="confirmation-empty" class="empty-state">
-                  We’ll show the suggested merchant here after submission.
-                </div>
-                <div id="confirmation-card" class="hidden"></div>
-              </section>
+              </form>
 
-              <section class="step-card">
-                <div class="subsection-header">
-                  <div>
-                    <div class="section-kicker">Step 3</div>
-                    <h2>Upload invoice</h2>
+              <div id="discovery-summary" class="message hidden"></div>
+            </section>
+
+            <section class="step-card">
+              <div class="step-header">
+                <div>
+                  <div class="step-kicker">Step 2</div>
+                  <h2>Suggested merchant</h2>
+                  <p class="step-copy">Review the best suggested merchant and confirm it.</p>
+                </div>
+              </div>
+
+              <div id="candidate-list" class="candidate-list"></div>
+              <div id="confirmation-empty" class="empty-state">
+                A suggested merchant will appear here after submission.
+              </div>
+              <div id="confirmation-card" class="hidden"></div>
+            </section>
+
+            <section class="step-card">
+              <div class="step-header">
+                <div>
+                  <div class="step-kicker">Step 3</div>
+                  <h2>Invoice upload</h2>
+                  <p class="step-copy">Upload a PDF, document, text file, or invoice image to extract content.</p>
+                </div>
+              </div>
+
+              <div class="upload-card">
+                <div class="upload-copy">
+                  <h3>Upload and scan invoice</h3>
+                  <p>The prototype extracts text locally and prepares it for validation.</p>
+                </div>
+                <div class="upload-controls">
+                  <div id="drop-zone" class="drop-zone" tabindex="0">
+                    <div class="drop-title">Drag and drop invoice here</div>
+                    <div class="drop-subtitle">or click to browse PDF, DOCX, TXT, MD, PNG, JPG</div>
+                    <div id="drop-file-name" class="drop-file-name">No file selected</div>
                   </div>
+                  <input id="invoiceFile" class="visually-hidden" type="file" accept=".pdf,.docx,.txt,.md,.png,.jpg,.jpeg,.bmp,.gif,.webp" />
+                  <button type="button" id="scan-invoice" class="action-btn secondary">Upload And Scan</button>
                 </div>
+              </div>
 
-                <div class="upload-panel simple-upload">
-                  <div class="upload-copy">
-                    <h3>Upload and scan invoice</h3>
-                    <p>Upload a PDF, DOCX, text file, or invoice image.</p>
-                  </div>
-                  <div class="upload-controls">
-                    <div id="drop-zone" class="drop-zone" tabindex="0">
-                      <div class="drop-title">Drag and drop invoice here</div>
-                      <div class="drop-subtitle">or click to browse PDF, DOCX, TXT, MD, PNG, JPG</div>
-                      <div id="drop-file-name" class="drop-file-name">No file selected</div>
-                    </div>
-                    <input id="invoiceFile" class="visually-hidden" type="file" accept=".pdf,.docx,.txt,.md,.png,.jpg,.jpeg,.bmp,.gif,.webp" />
-                    <button type="button" id="scan-invoice" class="action-btn secondary">Upload And Scan</button>
-                  </div>
+              <div id="scan-summary" class="empty-state">
+                No invoice uploaded yet. Supported prototype formats: PDF, DOCX, TXT, MD, PNG, JPG.
+              </div>
+            </section>
+
+            <section class="step-card">
+              <div class="step-header">
+                <div>
+                  <div class="step-kicker">Step 4</div>
+                  <h2>Validate transaction</h2>
+                  <p class="step-copy">Compare invoice evidence with the posted transaction.</p>
                 </div>
+              </div>
 
-                <div id="scan-summary" class="empty-state">
-                  No invoice uploaded yet. Supported prototype formats: PDF, DOCX, TXT, MD, PNG, JPG.
-                </div>
-              </section>
-
-              <section class="step-card">
-                <div class="subsection-header">
-                  <div>
-                    <div class="section-kicker">Step 4</div>
-                    <h2>Validate transaction</h2>
-                  </div>
-                </div>
-
-                <form id="validation-form" class="simple-form">
-                  <label>
-                    <span>Invoice text</span>
-                    <textarea id="invoiceText" name="invoiceText" rows="8">Invoice From: Adobe Inc.
+              <form id="validation-form" class="form-stack">
+                <label class="field">
+                  <span>Invoice text</span>
+                  <textarea id="invoiceText" name="invoiceText" rows="8">Invoice From: Adobe Inc.
 Website: adobe.com
 Amount Due: 59.99 USD
 Invoice Date: 2026-04-16
 Country: US</textarea>
+                </label>
+
+                <div class="field-grid">
+                  <label class="field">
+                    <span>Statement descriptor</span>
+                    <input id="descriptor" name="descriptor" value="ADOBE *CREATIVE CLD" />
                   </label>
 
-                  <div class="two-up">
-                    <label>
-                      <span>Statement descriptor</span>
-                      <input id="descriptor" name="descriptor" value="ADOBE *CREATIVE CLD" />
-                    </label>
+                  <label class="field">
+                    <span>MCC</span>
+                    <input id="mcc" name="mcc" value="5734" />
+                  </label>
 
-                    <label>
-                      <span>MCC</span>
-                      <input id="mcc" name="mcc" value="5734" />
-                    </label>
-                  </div>
-
-                  <label>
+                  <label class="field">
                     <span>Amount</span>
                     <input id="amount" name="amount" type="number" step="0.01" value="59.99" />
                   </label>
-
-                  <div class="button-row">
-                    <button type="submit" class="action-btn primary">Run validation</button>
-                  </div>
-                </form>
-
-                <div id="validation-empty" class="empty-state">
-                  Confirm a merchant first, then run validation.
                 </div>
-                <div id="validation-result" class="hidden"></div>
-              </section>
+
+                <div class="button-row">
+                  <button type="submit" class="action-btn primary">Run validation</button>
+                </div>
+              </form>
+
+              <div id="validation-empty" class="empty-state">
+                Confirm a merchant first, then run validation.
+              </div>
+              <div id="validation-result" class="hidden"></div>
+            </section>
+          </div>
+
+          <aside class="side-column">
+            <section class="side-card">
+              <div class="eyebrow">Quick Summary</div>
+              <h2>Current outcome</h2>
+              <div id="decision-summary" class="summary-grid">
+                <div class="summary-item">
+                  <div class="summary-label">Merchant discovery</div>
+                  <div class="summary-value">Pending</div>
+                </div>
+                <div class="summary-item">
+                  <div class="summary-label">Acceptance data</div>
+                  <div class="summary-value">Pending</div>
+                </div>
+                <div class="summary-item">
+                  <div class="summary-label">Validation outcome</div>
+                  <div class="summary-value">Pending</div>
+                </div>
+              </div>
             </section>
 
-            <aside class="side-stack">
-              <section class="summary-card">
-                <div class="section-kicker">Quick summary</div>
-                <h2>Current outcome</h2>
-                <div id="decision-summary" class="summary-grid">
-                  <div class="summary-item">
-                    <div class="summary-label">Merchant discovery</div>
-                    <div class="summary-value">Pending</div>
-                  </div>
-                  <div class="summary-item">
-                    <div class="summary-label">Acceptance data</div>
-                    <div class="summary-value">Pending</div>
-                  </div>
-                  <div class="summary-item">
-                    <div class="summary-label">Validation outcome</div>
-                    <div class="summary-value">Pending</div>
-                  </div>
-                </div>
-              </section>
+            <section class="side-card technical-panel">
+              <div class="eyebrow">Technical Details</div>
+              <p class="technical-copy">
+                This panel is for demos and troubleshooting. It shows the confirmed merchant snapshot and the technical workflow timeline.
+              </p>
 
-              <section class="technical-panel">
-                <div class="section-kicker">Technical details</div>
-                <p class="technical-copy">
-                  This section is for demos and troubleshooting. End users do not need it for the core flow.
-                </p>
-                <div class="subsection-header compact-block">
-                  <div>
-                    <div class="section-kicker">Confirmed merchant</div>
-                    <h2>Merchant snapshot</h2>
-                  </div>
-                </div>
+              <div class="technical-block">
+                <div class="eyebrow">Confirmed merchant</div>
+                <h2>Merchant snapshot</h2>
                 <div id="technical-confirmation-empty" class="empty-state">
                   The confirmed merchant snapshot will appear here after selection.
                 </div>
                 <div id="technical-confirmation-card" class="hidden"></div>
+              </div>
 
-                <div class="trace-header compact">
+              <div class="technical-block">
+                <div class="side-header">
                   <div>
-                    <div class="section-kicker">Workflow timeline</div>
+                    <div class="eyebrow">Workflow timeline</div>
                     <h2>Execution timeline</h2>
                   </div>
                   <button type="button" id="clear-trace" class="clear-btn">Clear</button>
                 </div>
                 <div id="api-trace" class="trace-list"></div>
-              </section>
-            </aside>
-          </div>
+              </div>
+            </section>
+          </aside>
         </section>
       </main>
     </div>
