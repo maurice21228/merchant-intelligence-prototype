@@ -13,7 +13,7 @@ export class MerchantDiscoveryService {
     return this.graphProvider.searchByName(supplierName);
   }
 
-  discover(supplierName) {
+  async discover(supplierName) {
     const graphCandidates = this.graphProvider.searchByName(supplierName);
 
     if (graphCandidates.length > 0 && graphCandidates[0].confidence >= 0.75) {
@@ -24,7 +24,7 @@ export class MerchantDiscoveryService {
       };
     }
 
-    const visaCandidates = this.visaMerchantSearchProvider.searchByName(supplierName);
+    const visaCandidates = await this.visaMerchantSearchProvider.searchByName(supplierName);
 
     if (visaCandidates.length > 0) {
       return {
@@ -34,7 +34,7 @@ export class MerchantDiscoveryService {
       };
     }
 
-    const webCandidates = this.webDiscoveryProvider.searchByName(supplierName);
+    const webCandidates = await this.webDiscoveryProvider.searchByName(supplierName);
 
     return {
       strategy: "web_discovery",
@@ -43,7 +43,39 @@ export class MerchantDiscoveryService {
     };
   }
 
-  confirm({ idempotencyKey, supplierName, selectedCandidateId, countryCode, requestType, poNumber }) {
+  async enrichMerchantFromVisa(merchant, supplierName) {
+    if (merchant.externalReferences?.visa?.merchantId) {
+      return merchant;
+    }
+
+    const searchTerms = Array.from(
+      new Set([merchant.canonicalName, supplierName, ...(merchant.aliases || [])].filter(Boolean))
+    );
+
+    for (const term of searchTerms) {
+      const candidates = await this.visaMerchantSearchProvider.searchByName(term);
+      const candidate = candidates[0];
+
+      if (!candidate) {
+        continue;
+      }
+
+      merchant.externalReferences = {
+        ...(merchant.externalReferences || {}),
+        ...(candidate.externalReferences || {})
+      };
+      merchant.domain = merchant.domain || candidate.domain || null;
+      merchant.countryCode = merchant.countryCode || candidate.countryCode || null;
+      merchant.mcc = merchant.mcc || candidate.mcc || null;
+      merchant.aliases = Array.from(new Set([...(merchant.aliases || []), ...(candidate.aliases || [])]));
+      merchant.source = merchant.source === "graph" ? "graph_plus_visa" : merchant.source;
+      break;
+    }
+
+    return merchant;
+  }
+
+  async confirm({ idempotencyKey, supplierName, selectedCandidateId, countryCode, requestType, poNumber }) {
     if (this.store.idempotencyKeys.has(idempotencyKey)) {
       return this.store.idempotencyKeys.get(idempotencyKey);
     }
@@ -79,12 +111,15 @@ export class MerchantDiscoveryService {
       merchant.aliases.push(supplierName);
     }
 
-    const acceptance = this.supplierMatchingProvider.getAcceptanceData(merchant);
+    merchant = await this.enrichMerchantFromVisa(merchant, supplierName);
+
+    const acceptance = await this.supplierMatchingProvider.getAcceptanceData(merchant);
     merchant.acceptance = {
       ...acceptance,
       source: "visa_supplier_matching",
       lastCheckedAt: nowIso()
     };
+    merchant.mcc = merchant.mcc || acceptance.mcc || null;
 
     const snapshot = {
       poNumber,
