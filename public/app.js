@@ -118,6 +118,10 @@ function updateDecisionSummary() {
   `;
 }
 
+function formatStrategyLabel(strategy) {
+  return typeof strategy === "string" ? strategy.replaceAll("_", " ") : "unknown";
+}
+
 async function requestJson(url, payload) {
   let response;
   let responsePayload = {};
@@ -400,7 +404,7 @@ async function handleDiscovery(event) {
     const result = await requestJson("/merchant/discover", payload);
     addTimelineStep({
       title: "Merchant resolution pipeline",
-      body: `Merchant Graph lookup ran first, then ${result.strategy.replaceAll("_", " ")} suggested ${result.suggestedMerchant?.canonicalName || "no merchant"}.`,
+      body: `Merchant Graph lookup ran first, then ${formatStrategyLabel(result.strategy)} suggested ${result.suggestedMerchant?.canonicalName || "no merchant"}.`,
       requestPayload: payload,
       responsePayload: {
         strategy: result.strategy,
@@ -409,7 +413,7 @@ async function handleDiscovery(event) {
       status: "success"
     });
     setMessage(
-      `Strategy: ${result.strategy.replaceAll("_", " ")}. Suggested merchant: ${result.suggestedMerchant?.canonicalName || "none"}.`,
+      `Strategy: ${formatStrategyLabel(result.strategy)}. Suggested merchant: ${result.suggestedMerchant?.canonicalName || "none"}.`,
       "info"
     );
     renderCandidates(result);
