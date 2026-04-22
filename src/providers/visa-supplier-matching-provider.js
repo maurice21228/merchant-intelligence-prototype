@@ -2,35 +2,17 @@ import { VisaApiClient } from "../lib/visa-api-client.js";
 
 const supportedCountries = new Set(["US", "GB", "IE", "FR", "DE", "IT", "NL", "PL", "SE", "CH"]);
 
-function normalizeBoolean(value) {
-  if (typeof value === "boolean") {
-    return value;
-  }
-
-  if (typeof value === "string") {
-    const normalized = value.toLowerCase();
-    if (["true", "yes", "y", "matched"].includes(normalized)) {
-      return true;
-    }
-    if (["false", "no", "n", "not_matched"].includes(normalized)) {
-      return false;
-    }
-  }
-
-  return null;
-}
-
 function pickBestMatch(payload) {
+  if (payload?.matchStatus || payload?.matchConfidence || payload?.matchDetails) {
+    return payload;
+  }
+
   const candidates = payload?.matchResults
     || payload?.supplierMatchResults
     || payload?.results
     || [];
 
-  if (!Array.isArray(candidates) || candidates.length === 0) {
-    return null;
-  }
-
-  return candidates[0];
+  return Array.isArray(candidates) && candidates.length > 0 ? candidates[0] : null;
 }
 
 export class VisaSupplierMatchingProvider {
@@ -47,7 +29,7 @@ export class VisaSupplierMatchingProvider {
       apiKey: process.env.VISA_API_KEY || "",
       sharedSecret: process.env.VISA_XPAY_SHARED_SECRET || ""
     });
-    this.matchPath = process.env.VISA_SUPPLIER_MATCHING_PATH || "/suppliermatching/v1/match";
+    this.matchPath = process.env.VISA_SUPPLIER_MATCHING_PATH || "/visasuppliermatchingservice/v1/search";
   }
 
   getFixtureAcceptanceData(merchant) {
@@ -78,16 +60,10 @@ export class VisaSupplierMatchingProvider {
       return null;
     }
 
-    const payload = {
-      suppliers: [
-        {
-          supplierName: merchant.canonicalName,
-          countryCode: merchant.countryCode
-        }
-      ]
-    };
-
-    const response = await this.client.postJson(this.matchPath, payload);
+    const response = await this.client.postWithoutBody(this.matchPath, {}, {
+      supplierName: merchant.canonicalName,
+      supplierCountryCode: merchant.countryCode
+    });
     const match = pickBestMatch(response);
 
     if (!match) {
@@ -98,19 +74,23 @@ export class VisaSupplierMatchingProvider {
       };
     }
 
-    const supportsCommercialCards =
-      normalizeBoolean(match.acceptsVisaCommercialCards)
-      ?? normalizeBoolean(match.visaCommercialAccepted)
-      ?? normalizeBoolean(match.commercialCardAccepted)
-      ?? true;
+    const rawMatchStatus = String(match.matchStatus || "").toLowerCase();
+    const isMatched = rawMatchStatus === "yes" || rawMatchStatus === "matched" || rawMatchStatus === "true";
+    const rawConfidence = match.matchConfidence || match.confidenceScore || null;
+    const matchDetails = match.matchDetails || {};
 
     return {
-      status: supportsCommercialCards ? "matched" : "no_match",
+      status: isMatched ? "matched" : "no_match",
       countryCode: merchant.countryCode,
-      supportsCommercialCards,
-      matchConfidence: match.matchConfidence || match.confidenceScore || null,
-      acceptedCardProducts: match.acceptedCardProducts || match.cardProducts || [],
-      mcc: match.mcc || match.merchantCategoryCode || null
+      supportsCommercialCards: isMatched,
+      matchConfidence: rawConfidence,
+      acceptedCardProducts: [],
+      mcc: matchDetails.mcc || match.mcc || match.merchantCategoryCode || null,
+      fleetInd: matchDetails.fleetInd || null,
+      l2Ind: matchDetails.l2Ind || matchDetails.l2 || null,
+      l3Ind: matchDetails.l3Ind || matchDetails.l3 || null,
+      statusCode: match.status?.statusCode || null,
+      statusDescription: match.status?.statusDescription || null
     };
   }
 
