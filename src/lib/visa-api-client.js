@@ -165,4 +165,68 @@ export class VisaApiClient {
       request.end();
     });
   }
+
+  async postWithoutBody(pathname, extraHeaders = {}, queryParams = {}) {
+    if (!this.isConfigured()) {
+      throw new Error("Visa API client is not configured");
+    }
+
+    const finalQueryParams = this.hasXPayCredentials()
+      ? { ...queryParams, apikey: this.apiKey }
+      : queryParams;
+    const queryString = this.buildSortedQueryString(finalQueryParams);
+    const target = new URL(`${this.baseUrl}${pathname}${queryString ? `?${queryString}` : ""}`);
+    const headers = this.buildHeaders(extraHeaders);
+    const bodyText = "";
+
+    if (this.hasXPayCredentials()) {
+      headers.Accept = headers.Accept || "application/json";
+      headers["X-PAY-TOKEN"] = this.buildXPayToken(
+        this.computeXPayResourcePath(target.pathname),
+        queryString,
+        bodyText
+      );
+    }
+
+    return new Promise((resolve, reject) => {
+      const request = https.request(
+        {
+          protocol: target.protocol,
+          hostname: target.hostname,
+          port: target.port || 443,
+          path: `${target.pathname}${target.search}`,
+          method: "POST",
+          agent: this.agent,
+          headers
+        },
+        (response) => {
+          let rawText = "";
+
+          response.on("data", (chunk) => {
+            rawText += chunk;
+          });
+
+          response.on("end", () => {
+            let parsed = null;
+
+            try {
+              parsed = rawText ? JSON.parse(rawText) : null;
+            } catch {
+              parsed = { raw: rawText };
+            }
+
+            if ((response.statusCode || 500) >= 400) {
+              reject(new Error(parsed?.message || parsed?.error || rawText || `Visa API request failed with ${response.statusCode}`));
+              return;
+            }
+
+            resolve(parsed);
+          });
+        }
+      );
+
+      request.on("error", reject);
+      request.end();
+    });
+  }
 }
