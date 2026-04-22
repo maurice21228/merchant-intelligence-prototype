@@ -50,6 +50,11 @@ export class MerchantDiscoveryService {
 
   async enrichMerchantFromVisa(merchant, supplierName) {
     if (merchant.externalReferences?.visa?.merchantId) {
+      console.log("[merchant-enrich]", {
+        merchantName: merchant.canonicalName,
+        visaMerchantId: merchant.externalReferences.visa.merchantId,
+        source: "already_present"
+      });
       return merchant;
     }
 
@@ -74,7 +79,22 @@ export class MerchantDiscoveryService {
       merchant.mcc = merchant.mcc || candidate.mcc || null;
       merchant.aliases = Array.from(new Set([...(merchant.aliases || []), ...(candidate.aliases || [])]));
       merchant.source = merchant.source === "graph" ? "graph_plus_visa" : merchant.source;
+      console.log("[merchant-enrich]", {
+        merchantName: merchant.canonicalName,
+        matchedOn: term,
+        visaMerchantId: merchant.externalReferences?.visa?.merchantId || null,
+        source: merchant.source
+      });
       break;
+    }
+
+    if (!merchant.externalReferences?.visa?.merchantId) {
+      console.log("[merchant-enrich]", {
+        merchantName: merchant.canonicalName,
+        matchedOn: null,
+        visaMerchantId: null,
+        source: "no_visa_match"
+      });
     }
 
     return merchant;
@@ -125,6 +145,13 @@ export class MerchantDiscoveryService {
       lastCheckedAt: nowIso()
     };
     merchant.mcc = merchant.mcc || acceptance.mcc || null;
+    console.log("[merchant-confirm]", {
+      supplierName,
+      merchantName: merchant.canonicalName,
+      visaMerchantId: merchant.externalReferences?.visa?.merchantId || null,
+      acceptanceStatus: merchant.acceptance?.status || null,
+      countryCode: merchant.countryCode
+    });
 
     const snapshot = {
       poNumber,
