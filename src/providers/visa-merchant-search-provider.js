@@ -131,7 +131,13 @@ export class VisaMerchantSearchProvider {
       if (liveCandidates.length > 0) {
         return liveCandidates.sort((left, right) => right.confidence - left.confidence);
       }
-    } catch {
+    } catch (error) {
+      console.error("[visa-merchant-search] live lookup failed", {
+        supplierName,
+        baseUrl: this.client.baseUrl,
+        path: this.searchPath,
+        message: error.message
+      });
       // Fallback to deterministic fixtures until credentials and field mappings are confirmed.
     }
 

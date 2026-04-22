@@ -128,7 +128,14 @@ export class VisaSupplierMatchingProvider {
       if (live) {
         return live;
       }
-    } catch {
+    } catch (error) {
+      console.error("[visa-supplier-matching] live lookup failed", {
+        merchantName: merchant.canonicalName,
+        countryCode: merchant.countryCode,
+        baseUrl: this.client.baseUrl,
+        path: this.matchPath,
+        message: error.message
+      });
       // Keep the mock fallback available until live credentials are confirmed.
     }
 
