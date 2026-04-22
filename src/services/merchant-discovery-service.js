@@ -17,30 +17,35 @@ export class MerchantDiscoveryService {
     const graphCandidates = this.graphProvider.searchByName(supplierName);
 
     if (graphCandidates.length > 0 && graphCandidates[0].confidence >= 0.75) {
-      return {
+      const result = {
         strategy: "graph_first",
         candidates: graphCandidates.slice(0, 5),
         suggestedMerchant: graphCandidates[0]
       };
+      console.log("[merchant-discover]", { supplierName, strategy: result.strategy, suggestedMerchant: result.suggestedMerchant?.canonicalName });
+      return result;
     }
 
     const visaCandidates = await this.visaMerchantSearchProvider.searchByName(supplierName);
 
     if (visaCandidates.length > 0) {
-      return {
+      const result = {
         strategy: "visa_merchant_search",
         candidates: [...graphCandidates.slice(0, 2), ...visaCandidates.slice(0, 3)].slice(0, 5),
         suggestedMerchant: visaCandidates[0]
       };
+      console.log("[merchant-discover]", { supplierName, strategy: result.strategy, suggestedMerchant: result.suggestedMerchant?.canonicalName });
+      return result;
     }
 
     const webCandidates = await this.webDiscoveryProvider.searchByName(supplierName);
-
-    return {
+    const result = {
       strategy: "web_discovery",
       candidates: [...graphCandidates.slice(0, 2), ...webCandidates.slice(0, 3)].slice(0, 5),
       suggestedMerchant: webCandidates[0] || null
     };
+    console.log("[merchant-discover]", { supplierName, strategy: result.strategy, suggestedMerchant: result.suggestedMerchant?.canonicalName || null });
+    return result;
   }
 
   async enrichMerchantFromVisa(merchant, supplierName) {
